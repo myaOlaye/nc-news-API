@@ -53,3 +53,39 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
+describe("GET /api/article/:article_id", () => {
+  test("200: Responds with an article object of a specific id with all the required properties", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual({
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+          article_id: 1,
+        });
+      });
+  });
+  test("404: Responds with Article not found when article of given id does not exist", () => {
+    return request(app)
+      .get("/api/articles/500")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
+      });
+  });
+  test("400: Responds with Bad request when given id is incorrect data type", () => {
+    return request(app)
+      .get("/api/articles/banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
