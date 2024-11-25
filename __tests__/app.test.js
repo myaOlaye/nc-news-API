@@ -5,6 +5,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+require("jest-sorted");
 /* Set up your beforeEach & afterAll functions here */
 
 afterAll(() => {
@@ -86,6 +87,35 @@ describe("GET /api/article/:article_id", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: Responds with an array of article objects sorted by date in descending order, each containing a comment count", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(13);
+        articles.forEach((article) => {
+          expect(article).toEqual({
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            article_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+          expect(article).not.toHaveProperty("body");
+        });
+        expect(articles).toBeSorted({
+          key: "created_at",
+          descending: true,
+          coerce: true,
+        });
       });
   });
 });

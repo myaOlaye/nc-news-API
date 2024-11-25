@@ -1,13 +1,14 @@
 const express = require("express");
 const {
-  badUrlErrorHandler,
   customErrorHandler,
   postgressErrorHandler,
+  invalidUrlErrorHandler,
 } = require("./controllers/error-controllers");
 const {
   getApi,
   getTopics,
   getArticle,
+  getArticles,
 } = require("./controllers/get-controllers");
 
 const app = express();
@@ -19,7 +20,9 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticle);
 
-app.all("*", badUrlErrorHandler);
+app.get("/api/articles", getArticles);
+
+app.all("*", invalidUrlErrorHandler);
 
 app.use(customErrorHandler);
 
