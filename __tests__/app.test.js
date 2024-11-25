@@ -92,7 +92,7 @@ describe("GET /api/article/:article_id", () => {
 });
 
 describe("GET /api/articles", () => {
-  test("200: Responds with an array of article objects sorted by date in descending order, each containing a comment count", () => {
+  test("200: Responds with an array of article objects, each containing a comment count", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -111,11 +111,68 @@ describe("GET /api/articles", () => {
           });
           expect(article).not.toHaveProperty("body");
         });
+      });
+  });
+  test("200: Responds with an array of article objects sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
         expect(articles).toBeSorted({
           key: "created_at",
           descending: true,
           coerce: true,
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Responds with an array of comments for the given article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(11);
+        comments.forEach((comment) => {
+          expect(comment).toEqual({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            article_id: 1,
+          });
+        });
+      });
+  });
+  test("200: Responds with an array of comments in descending order", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeSorted({
+          key: "created_at",
+          descending: true,
+          coerce: true,
+        });
+      });
+  });
+
+  test("404: Responds with Not found for an article id that doesn't exist", () => {
+    return request(app)
+      .get("/api/articles/100/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with Bad request found for an article id that is invalid", () => {
+    return request(app)
+      .get("/api/articles/bananas/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
       });
   });
 });
