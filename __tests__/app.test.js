@@ -25,3 +25,31 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("GET generic not found url request", () => {
+  test("404: Responds with Not found when url does not exist", () => {
+    return request(app)
+      .get("/api/bananas")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+});
+
+describe("GET /api/topics", () => {
+  test("200: Responds with an array of topic objects, each with a slug and description property", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body: { topics } }) => {
+        expect(topics.length).toEqual(3);
+        topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            description: expect.any(String),
+            slug: expect.any(String),
+          });
+        });
+      });
+  });
+});
