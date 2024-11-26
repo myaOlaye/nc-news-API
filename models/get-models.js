@@ -19,27 +19,27 @@ exports.selectArticle = (article_id) => {
 
 exports.selectArticles = () => {
   return db
-    .query("SELECT * FROM comments")
+    .query(
+      `
+      SELECT 
+        articles.article_id,
+        articles.title,
+        articles.author,
+        articles.created_at,
+        articles.votes,
+        articles.topic,
+        articles.article_img_url,
+        COUNT(comments.comment_id)::int AS comment_count
+      FROM articles
+      LEFT JOIN comments
+      ON articles.article_id = comments.article_id
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;
+      `
+    )
     .then(({ rows }) => {
-      const commentData = {};
-      // How can I do this with on query to the database using JOIN? Do I need an agregeate function?
-      for (let i = 0; i < rows.length; i++) {
-        const currentArticle_id = rows[i].article_id;
-        commentData[currentArticle_id] =
-          commentData[currentArticle_id] + 1 || 1;
-      }
-      return commentData;
-    })
-    .then((commentData) => {
-      return db
-        .query("SELECT * FROM articles ORDER BY created_at desc")
-        .then(({ rows }) => {
-          rows.forEach((article) => {
-            article.comment_count = commentData[article.article_id] || 0;
-            delete article.body;
-          });
-          return rows;
-        });
+      console.log(rows);
+      return rows;
     });
 };
 
@@ -50,9 +50,6 @@ exports.selectComments = (article_id) => {
       [article_id]
     )
     .then(({ rows }) => {
-      // if (rows.length === 0) {
-      //   return Promise.reject({ status: 404, msg: "Not found" });
-      // }
       return rows;
     });
 };
