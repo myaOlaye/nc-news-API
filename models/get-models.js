@@ -38,7 +38,6 @@ exports.selectArticles = () => {
       `
     )
     .then(({ rows }) => {
-      console.log(rows);
       return rows;
     });
 };

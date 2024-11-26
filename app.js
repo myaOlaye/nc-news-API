@@ -11,6 +11,7 @@ const {
   getArticles,
   getComments,
 } = require("./controllers/get-controllers");
+const { postComment } = require("./controllers/post-controllers");
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,8 @@ app.get("/api/articles/:article_id", getArticle);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getComments);
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.all("*", invalidUrlErrorHandler);
 

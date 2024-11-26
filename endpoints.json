@@ -40,11 +40,21 @@
       "article_id": 3
     }
   },
-  "GET /api/articles/:article_id/commenst": {
+  "GET /api/articles/:article_id/comments": {
     "description": "serves an array of comments with a specific article id",
     "exampleResponse": {
       "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       "votes": 16,
+      "author": "butter_bridge",
+      "article_id": 9,
+      "created_at": 1586179020000
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "responds with a posted comment on a specific article",
+    "exampleResponse": {
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 0,
       "author": "butter_bridge",
       "article_id": 9,
       "created_at": 1586179020000
