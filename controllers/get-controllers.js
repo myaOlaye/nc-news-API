@@ -36,8 +36,16 @@ exports.getArticles = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   const { article_id } = req.params;
-  selectComments(article_id)
-    .then((comments) => {
+  const promises = [selectComments(article_id)];
+
+  if (article_id) {
+    console.log("in category_id if");
+    promises.push(selectArticle(article_id));
+  }
+
+  Promise.all(promises)
+    .then(([comments]) => {
+      console.log(comments);
       res.status(200).send({ comments });
     })
     .catch(next);
