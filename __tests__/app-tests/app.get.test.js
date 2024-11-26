@@ -267,3 +267,74 @@ describe("POST /api/articles/:article_id/comments", () => {
   //     });
   // });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: responds with article of a specific id with updated votes property when votes have increased", () => {
+    const voteUpdate = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          votes: 105,
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: 1,
+          article_img_url: expect.any(String),
+          title: expect.any(String),
+          topic: expect.any(String),
+        });
+      });
+  });
+  test("200: responds with article of a specific id with updated votes property when votes have decreased", () => {
+    const voteUpdate = { inc_votes: -5 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          votes: 95,
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: 1,
+          article_img_url: expect.any(String),
+          title: expect.any(String),
+          topic: expect.any(String),
+        });
+      });
+  });
+  test("404: responds with Not found when article doesn't exist", () => {
+    const voteUpdate = { inc_votes: -5 };
+    return request(app)
+      .patch("/api/articles/100")
+      .send(voteUpdate)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("400: responds with Bad request when article is invalid", () => {
+    const voteUpdate = { inc_votes: -5 };
+    return request(app)
+      .patch("/api/articles/banana")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("400: responds with Bad request when inc_votes is NaN", () => {
+    const voteUpdate = { inc_votes: "banana" };
+    return request(app)
+      .patch("/api/articles/banana")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
