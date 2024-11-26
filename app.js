@@ -10,6 +10,7 @@ const {
   getArticle,
   getArticles,
   getComments,
+  getUsers,
 } = require("./controllers/get-controllers");
 const { patchArticle } = require("./controllers/patch-controllers");
 const { deleteComment } = require("./controllers/delete.controllers");
@@ -27,6 +28,8 @@ app.get("/api/articles/:article_id", getArticle);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getComments);
+
+app.get("/api/users", getUsers);
 
 app.post("/api/articles/:article_id/comments", postComment);
 

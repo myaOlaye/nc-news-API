@@ -3,8 +3,8 @@ const {
   selectTopics,
   selectArticle,
   selectArticles,
-
   selectComments,
+  selectUsers,
 } = require("../models/get-models");
 
 exports.getApi = (req, res) => {
@@ -47,4 +47,10 @@ exports.getComments = (req, res, next) => {
       res.status(200).send({ comments });
     })
     .catch(next);
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((users) => {
+    res.status(200).send(users);
+  });
 };
