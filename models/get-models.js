@@ -52,3 +52,9 @@ exports.selectComments = (article_id) => {
       return rows;
     });
 };
+
+exports.selectUsers = () => {
+  return db.query(`SELECT * FROM users`).then(({ rows }) => {
+    return rows;
+  });
+};
