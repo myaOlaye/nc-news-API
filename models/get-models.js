@@ -11,7 +11,7 @@ exports.selectArticle = (article_id) => {
     .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Article not found" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows[0];
     });
@@ -22,7 +22,7 @@ exports.selectArticles = () => {
     .query("SELECT * FROM comments")
     .then(({ rows }) => {
       const commentData = {};
-
+      // How can I do this with on query to the database using JOIN? Do I need an agregeate function?
       for (let i = 0; i < rows.length; i++) {
         const currentArticle_id = rows[i].article_id;
         commentData[currentArticle_id] =
@@ -31,25 +31,28 @@ exports.selectArticles = () => {
       return commentData;
     })
     .then((commentData) => {
-      return db.query("SELECT * FROM articles").then(({ rows }) => {
-        rows.forEach((article) => {
-          article.comment_count = commentData[article.article_id] || 0;
-          delete article.body;
+      return db
+        .query("SELECT * FROM articles ORDER BY created_at desc")
+        .then(({ rows }) => {
+          rows.forEach((article) => {
+            article.comment_count = commentData[article.article_id] || 0;
+            delete article.body;
+          });
+          return rows;
         });
-        rows.sort((a, b) => b.created_at - a.created_at);
-        return rows;
-      });
     });
 };
 
 exports.selectComments = (article_id) => {
   return db
-    .query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
+    .query(
+      `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
+      [article_id]
+    )
     .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
-      }
-      rows.sort((a, b) => a.created_at - b.created_at);
+      // if (rows.length === 0) {
+      //   return Promise.reject({ status: 404, msg: "Not found" });
+      // }
       return rows;
     });
 };

@@ -78,7 +78,7 @@ describe("GET /api/article/:article_id", () => {
       .get("/api/articles/500")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Article not found");
+        expect(msg).toBe("Not found");
       });
   });
   test("400: Responds with Bad request when given id is incorrect data type", () => {
@@ -167,12 +167,21 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Not found");
       });
   });
+
   test("400: Responds with Bad request found for an article id that is invalid", () => {
     return request(app)
       .get("/api/articles/bananas/comments")
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
+      });
+  });
+  test("200: Responds with empty array for an id that exists but has no comments yet", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([]);
       });
   });
 });
