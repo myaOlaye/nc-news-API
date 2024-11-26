@@ -12,6 +12,7 @@ const {
   getComments,
 } = require("./controllers/get-controllers");
 const { patchArticle } = require("./controllers/patch-controllers");
+const { deleteComment } = require("./controllers/delete.controllers");
 const { postComment } = require("./controllers/post-controllers");
 
 const app = express();
@@ -30,6 +31,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchArticle);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("*", invalidUrlErrorHandler);
 
