@@ -7,6 +7,7 @@ exports.selectTopics = () => {
 };
 
 exports.selectArticle = (article_id) => {
+  console.log(article_id, typeof article_id);
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
@@ -58,7 +59,6 @@ exports.selectArticles = (sort_by = "created_at", topic, order = "desc") => {
 
   return db.query(queryString, topicQuery).then(({ rows }) => {
     if (rows.length === 0) {
-      console.log("in checking rows length if");
       return Promise.reject({ status: 404, msg: "Not found" });
     }
     return rows;

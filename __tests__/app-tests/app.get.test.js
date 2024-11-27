@@ -81,7 +81,7 @@ describe("GET /api/article/:article_id", () => {
         expect(msg).toBe("Not found");
       });
   });
-  test("400: Responds with Bad request when given id is incorrect data type", () => {
+  test.only("400: Responds with Bad request when given id is incorrect data type", () => {
     return request(app)
       .get("/api/articles/banana")
       .expect(400)
@@ -576,8 +576,11 @@ describe("GET /api/articles?topic=value", () => {
         expect(msg).toBe("Not found");
       });
   });
-  // below test doesn't make sense as 5 is put into a string in the model by using $1 so we dont get a type error, we get 404 error
+  // below test doesn't make sense as 5 is read as a string for some reason that I am unsure of (assuming sql does no type conversion unlike how it has previously done),
+  // so we get 404 error
   // is this ok? Above test accounts for any non-existent AND invalid string input I think?
+  // in other words im confused why this postgress error does not get thrown:  "error: invalid input syntax for type varchar: "5"
+  // does postgress not do type conversion from strings of numbers to numbers in this scenario?
   // test.only("400: returns Bad request when topic is invalid", () => {
   //   return request(app)
   //     .get("/api/articles?topic=5")
