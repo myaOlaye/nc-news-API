@@ -17,7 +17,7 @@ exports.selectArticle = (article_id) => {
     });
 };
 
-exports.selectArticles = (sort_by = "created_at", order = "desc") => {
+exports.selectArticles = (sort_by = "created_at", topic, order = "desc") => {
   const validSorts = [
     "article_id",
     "title",
@@ -29,6 +29,7 @@ exports.selectArticles = (sort_by = "created_at", order = "desc") => {
     "comment_count",
   ];
   const validOrder = ["asc", "desc"];
+  const topicQuery = [];
 
   if (!validSorts.includes(sort_by) || !validOrder.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
@@ -45,11 +46,21 @@ exports.selectArticles = (sort_by = "created_at", order = "desc") => {
   COUNT(comments.comment_id)::int AS comment_count
   FROM articles
   LEFT JOIN comments
-  ON articles.article_id = comments.article_id
-  GROUP BY articles.article_id
+  ON articles.article_id = comments.article_id `;
+
+  if (topic) {
+    queryString += `WHERE articles.topic = $1 `;
+    topicQuery.push(topic);
+  }
+
+  queryString += `GROUP BY articles.article_id
   ORDER BY articles.${sort_by} ${order};`;
 
-  return db.query(queryString).then(({ rows }) => {
+  return db.query(queryString, topicQuery).then(({ rows }) => {
+    if (rows.length === 0) {
+      console.log("in checking rows length if");
+      return Promise.reject({ status: 404, msg: "Not found" });
+    }
     return rows;
   });
 };

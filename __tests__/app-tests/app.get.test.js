@@ -546,3 +546,44 @@ describe("GET /api/articles?sort_by=value&order=value", () => {
     });
   });
 });
+
+describe("GET /api/articles?topic=value", () => {
+  test("200: returns array of article objects with a specified topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(12);
+        articles.forEach((article) => {
+          expect(article).toEqual({
+            title: expect.any(String),
+            topic: "mitch",
+            author: expect.any(String),
+            article_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+  test("404: returns Not found when topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=bananas")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  // below test doesn't make sense as 5 is put into a string in the model by using $1 so we dont get a type error, we get 404 error
+  // is this ok? Above test accounts for any non-existent AND invalid string input I think?
+  // test.only("400: returns Bad request when topic is invalid", () => {
+  //   return request(app)
+  //     .get("/api/articles?topic=5")
+  //     .expect(400)
+  //     .then(({ body: { msg } }) => {
+  //       expect(msg).toBe("Bad request");
+  //     });
+  // });
+});
