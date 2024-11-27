@@ -1,4 +1,38 @@
-# Northcoders News API
+# NC News API
+
+## Description
+This is a REST API for a news application where users can read articles, leave comments, and more.  
+
+### Hosted Version
+
+You can access the live version of the project here: **[https://myas-news-api.onrender.com/api]**
+
+---
+
+## Getting Started
+
+To get started with this project locally, follow the instructions below.
+
+---
+
+### Minimum Requirements
+
+- **Node.js:**
+- **PostgreSQL:** 
+
+---
+
+### Cloning the Repository
+
+1. Clone the repository to your local machine:
+
+   ```bash
+   git clone [your-repo-link]
+   cd [your-repo-folder]
+
+## Install all dependencies
+
+npm install
 
 ## Environment Setup
 
@@ -19,6 +53,30 @@ To successfully run the project locally, you need to set up the necessary enviro
        ```env
        PGDATABASE=nc_news_test
        ```
---- 
+       
+### Seeding the Database
+
+Create and seed the local development database:
+
+```bash
+npm run setup-dbs
+npm run seed
+```
+### Running Tests
+
+To ensure everything is working as expected, run the test suite:
+
+```bash
+npm test
+
+
+
+
+
+
+
+---
+
+
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
