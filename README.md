@@ -21,7 +21,9 @@ To get started with this project locally, you will need to have Node.js and Post
 
 ## Install all dependencies
 
-npm install
+1. Install all required dependencies:
+   ```bash
+   npm install
 
 ## Environment Setup
 
