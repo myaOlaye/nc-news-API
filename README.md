@@ -7,20 +7,14 @@ This is a REST API for a news application where users can read articles, leave c
 
 You can access the live version of the project here: **[https://myas-news-api.onrender.com/api]**
 
----
-
 ## Getting Started
 
 To get started with this project locally, follow the instructions below.
-
----
 
 ### Minimum Requirements
 
 - **Node.js:**
 - **PostgreSQL:** 
-
----
 
 ### Cloning the Repository
 
