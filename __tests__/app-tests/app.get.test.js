@@ -70,6 +70,7 @@ describe("GET /api/article/:article_id", () => {
           votes: expect.any(Number),
           article_img_url: expect.any(String),
           article_id: 1,
+          comment_count: 11,
         });
       });
   });
@@ -81,7 +82,7 @@ describe("GET /api/article/:article_id", () => {
         expect(msg).toBe("Not found");
       });
   });
-  test.only("400: Responds with Bad request when given id is incorrect data type", () => {
+  test("400: Responds with Bad request when given id is incorrect data type", () => {
     return request(app)
       .get("/api/articles/banana")
       .expect(400)
