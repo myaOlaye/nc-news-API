@@ -113,7 +113,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  test("200: Responds with an array of article objects sorted by date in descending order", () => {
+  test("200: Responds with an array of article objects sorted by date in descending order by default", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -381,5 +381,168 @@ describe("GET /api/users", () => {
           });
         });
       });
+  });
+});
+
+describe("GET /api/articles?sort_by=value", () => {
+  describe("200: responds with array of articles objects sorted by valid column, descending by default", () => {
+    test("200: sorted by title, descending by default", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "title",
+            descending: true,
+          });
+        });
+    });
+    test("200: sorted by topic, descending by default", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic")
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "topic",
+            descending: true,
+          });
+        });
+    });
+    test("200: sorted by created_at, descending by default", () => {
+      return request(app)
+        .get("/api/articles?sort_by=created_at")
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "created_at",
+            descending: true,
+          });
+        });
+    });
+  });
+
+  test("400: responds Bad request when sort_by column does not exist", () => {
+    return request(app)
+      .get("/api/articles?sort_by=bananas")
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles?order=value", () => {
+  test("200: returns array of articles in descending order of created_at by default ", () => {
+    return request(app)
+      .get("/api/articles?order=desc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSorted({
+          key: "created_at",
+          descending: true,
+        });
+      });
+  });
+  test("200: returns array of articles in ascending order of created_at by default ", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSorted({
+          key: "created_at",
+          ascending: true,
+        });
+      });
+  });
+  test("400: returns Bad request when order value is invalid", () => {
+    return request(app)
+      .get("/api/articles?order=bananas")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles?sort_by=value&order=value", () => {
+  describe("200: responds with array of articles objects sorted by valid column, and ordered as specified", () => {
+    test("200: sorted by title, descending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=desc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "title",
+            descending: true,
+          });
+        });
+    });
+    test("200: sorted by title, ascending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "title",
+            ascending: true,
+          });
+        });
+    });
+    test("200: sorted by topic, descending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic&order=desc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "topic",
+            descending: true,
+          });
+        });
+    });
+    test("200: sorted by topic, ascending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic&order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "topic",
+            ascending: true,
+          });
+        });
+    });
+    test("200: sorted by created_at, descending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=created_at&order=desc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "created_at",
+            descending: true,
+          });
+        });
+    });
+    test("200: sorted by created_at, ascending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=created_at&order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "created_at",
+            ascending: true,
+          });
+        });
+    });
+  });
+  describe("400: responds with Bad request when sort_by OR order query is invalid", () => {
+    test("400: responds Bad request when sort_by column does not exist", () => {
+      return request(app)
+        .get("/api/articles?sort_by=bananas&order=desc")
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("400: responds Bad request when sort_by column does not exist", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=bananas")
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
   });
 });
