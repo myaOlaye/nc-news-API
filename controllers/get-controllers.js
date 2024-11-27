@@ -1,3 +1,4 @@
+const { sort } = require("../db/data/test-data/articles");
 const endpointsJson = require("../endpoints.json");
 const {
   selectTopics,
@@ -29,9 +30,15 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  selectArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  const { sort_by } = req.query;
+  const { order } = req.query;
+  selectArticles(sort_by, order)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getComments = (req, res, next) => {
