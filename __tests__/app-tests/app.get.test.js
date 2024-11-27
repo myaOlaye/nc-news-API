@@ -275,8 +275,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(voteUpdate)
       .expect(200)
-      .then(({ body }) => {
-        expect(body).toEqual({
+      .then(({ body: { updatedArticle } }) => {
+        expect(updatedArticle).toEqual({
           votes: 105,
           created_at: expect.any(String),
           author: expect.any(String),
@@ -294,8 +294,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(voteUpdate)
       .expect(200)
-      .then(({ body }) => {
-        expect(body).toEqual({
+      .then(({ body: { updatedArticle } }) => {
+        expect(updatedArticle).toEqual({
           votes: 95,
           created_at: expect.any(String),
           author: expect.any(String),

@@ -6,7 +6,7 @@ exports.patchArticle = (req, res, next) => {
 
   updateArticle(inc_votes, article_id)
     .then((updatedArticle) => {
-      res.status(200).send(updatedArticle);
+      res.status(200).send({ updatedArticle });
     })
     .catch((err) => {
       next(err);
