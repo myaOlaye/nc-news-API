@@ -30,13 +30,13 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { sort_by } = req.query;
-  const { order } = req.query;
-  selectArticles(sort_by, order)
+  const { sort_by, topic, order } = req.query;
+  selectArticles(sort_by, topic, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 };
