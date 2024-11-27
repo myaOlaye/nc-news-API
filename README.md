@@ -9,12 +9,7 @@ You can access the live version of the project here: **https://myas-news-api.onr
 
 ## Getting Started
 
-To get started with this project locally, follow the instructions below.
-
-### Minimum Requirements
-
-- **Node.js:**
-- **PostgreSQL:** 
+To get started with this project locally you will need to have Node.js and PostgreSQL installed, then follow the instructions below.
 
 ### Cloning the Repository
 
