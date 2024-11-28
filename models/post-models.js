@@ -12,3 +12,17 @@ exports.insertNewComment = (newComment, article_id) => {
       return rows[0];
     });
 };
+
+exports.insertNewArticle = (newArticle) => {
+  const { author, title, body, topic } = newArticle;
+  return db
+    .query(
+      `INSERT INTO articles(author, title, body, topic)
+    VALUES ($1,$2,$3, $4) RETURNING *`,
+      [author, title, body, topic]
+    )
+    .then(({ rows }) => {
+      rows[0].comment_count = 0;
+      return rows[0];
+    });
+};
