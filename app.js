@@ -1,41 +1,16 @@
 const express = require("express");
+const apiRouter = require("./routes/api-router");
 const {
   customErrorHandler,
   postgressErrorHandler,
   invalidUrlErrorHandler,
 } = require("./controllers/error-controllers");
-const {
-  getApi,
-  getTopics,
-  getArticle,
-  getArticles,
-  getComments,
-  getUsers,
-} = require("./controllers/get-controllers");
-const { patchArticle } = require("./controllers/patch-controllers");
-const { deleteComment } = require("./controllers/delete.controllers");
-const { postComment } = require("./controllers/post-controllers");
 
 const app = express();
+
 app.use(express.json());
 
-app.get("/api", getApi);
-
-app.get("/api/topics", getTopics);
-
-app.get("/api/articles/:article_id", getArticle);
-
-app.get("/api/articles", getArticles);
-
-app.get("/api/articles/:article_id/comments", getComments);
-
-app.get("/api/users", getUsers);
-
-app.post("/api/articles/:article_id/comments", postComment);
-
-app.patch("/api/articles/:article_id", patchArticle);
-
-app.delete("/api/comments/:comment_id", deleteComment);
+app.use("/api", apiRouter);
 
 app.all("*", invalidUrlErrorHandler);
 
