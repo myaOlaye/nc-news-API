@@ -372,9 +372,9 @@ describe("GET /api/users", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
-      .then(({ body }) => {
-        expect(body.length).toBe(4);
-        body.forEach((user) => {
+      .then(({ body: { users } }) => {
+        expect(users.length).toBe(4);
+        users.forEach((user) => {
           expect(user).toMatchObject({
             username: expect.any(String),
             name: expect.any(String),
@@ -590,4 +590,68 @@ describe("GET /api/articles?topic=value", () => {
   //       expect(msg).toBe("Bad request");
   //     });
   // });
+});
+
+describe("GET /api/users/:username", () => {
+  test("200: responds with array of a specific user", () => {
+    return request(app)
+      .get("/api/users/butter_bridge")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toEqual({
+          username: "butter_bridge",
+          name: "jonny",
+          avatar_url:
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        });
+      });
+  });
+  test("404: responds with Not found when user doesn't exist of a specific user", () => {
+    return request(app)
+      .get("/api/users/banana")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+});
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: responds with comment object with updated vote value", () => {
+    const voteUpdate = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body: { updatedComment } }) => {
+        expect(updatedComment).toEqual({
+          comment_id: 1,
+          body: expect.any(String),
+          votes: 21,
+          author: expect.any(String),
+          article_id: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("404: responds with Not found when comment id does not exist", () => {
+    const voteUpdate = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/comments/100")
+      .send(voteUpdate)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toEqual("Not found");
+      });
+  });
+  test("400: responds with Bad request when comment id is invalid", () => {
+    const voteUpdate = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/comments/banana")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toEqual("Bad request");
+      });
+  });
 });
