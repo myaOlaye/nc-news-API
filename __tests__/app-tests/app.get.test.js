@@ -655,3 +655,61 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("POST /api/articles", () => {
+  test("201: Adds a new article, adds article_img_url by default if none is given", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "test article",
+      body: "a test body for a test article",
+      topic: "mitch",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { newArticle } }) => {
+        expect(newArticle).toEqual({
+          author: "butter_bridge",
+          title: "test article",
+          body: "a test body for a test article",
+          topic: "mitch",
+          article_id: expect.any(Number),
+          article_img_url: expect.any(String),
+          votes: 0,
+          created_at: expect.any(String),
+          comment_count: 0,
+        });
+      });
+  });
+  test("404: Responds with Not found when author doesn't exist", () => {
+    const newArticle = {
+      author: "Banana",
+      title: "test article",
+      body: "a test body for a test article",
+      topic: "mitch",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("404: Responds with Not found when topic doesn't exist", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "test article",
+      body: "a test body for a test article",
+      topic: "Banana",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+});

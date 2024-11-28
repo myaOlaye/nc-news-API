@@ -74,7 +74,7 @@
       "comment_count": 11
     }
   },
-  "DELETE /api/comments/:comment_d": {
+  "DELETE /api/comments/:comment_id": {
     "description": "deletes comment of specific id and reponds with no content",
     "exampleResponse": {}
   },
@@ -92,5 +92,38 @@
         "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
       }
     ]
+  },
+  "GET /api/users/:username": {
+    "description": "reponds with specified user object",
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+    }
+  },
+  "PATCH /api/comments/:comment_i": {
+    "description": "reponds with comment with updated votes property",
+    "exampleResponse": {
+      "comment_id": 1,
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 10,
+      "author": "butter_bridge",
+      "article_id": 9,
+      "created_at": 1586179020000
+    }
+  },
+  "POST /api/articles": {
+    "description": "responds with a posted article",
+    "exampleResponse": {
+      "author": "butter_bridge",
+      "title": "test article",
+      "body": "a test body for a test article",
+      "topic": "mitch",
+      "article_id": 5,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      "votes": 0,
+      "created_at": 1586179020000,
+      "comment_count": 0
+    }
   }
 }

@@ -1,4 +1,4 @@
-const { insertNewComment } = require("../models/post-models");
+const { insertNewComment, insertNewArticle } = require("../models/post-models");
 
 exports.postComment = (req, res, next) => {
   const newComment = req.body;
@@ -11,4 +11,14 @@ exports.postComment = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.postArticle = (req, res, next) => {
+  const newArticle = req.body;
+
+  insertNewArticle(newArticle)
+    .then((newArticle) => {
+      res.status(201).send({ newArticle });
+    })
+    .catch(next);
 };
