@@ -27,7 +27,6 @@ exports.deleteArticle = (req, res, next) => {
       res.status(204).send();
     })
     .catch((err) => {
-      console.log("here");
       next(err);
     });
 };
