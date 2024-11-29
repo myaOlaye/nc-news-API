@@ -28,7 +28,13 @@ exports.selectArticle = (article_id) => {
     });
 };
 
-exports.selectArticles = (sort_by = "created_at", topic, order = "desc") => {
+exports.selectArticles = (
+  sort_by = "created_at",
+  topic,
+  order = "desc",
+  limit = 10,
+  p = 1
+) => {
   const validSorts = [
     "article_id",
     "title",
@@ -42,7 +48,14 @@ exports.selectArticles = (sort_by = "created_at", topic, order = "desc") => {
   const validOrder = ["asc", "desc"];
   const topicQuery = [];
 
-  if (!validSorts.includes(sort_by) || !validOrder.includes(order)) {
+  if (
+    !validSorts.includes(sort_by) ||
+    !validOrder.includes(order) ||
+    limit < 1 ||
+    isNaN(limit) ||
+    p < 1 ||
+    isNaN(p)
+  ) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
@@ -71,7 +84,15 @@ exports.selectArticles = (sort_by = "created_at", topic, order = "desc") => {
     if (rows.length === 0) {
       return Promise.reject({ status: 404, msg: "Not found" });
     }
-    return rows;
+    const total_count = rows.length;
+
+    const requestedPage = rows.splice((p - 1) * limit, limit);
+
+    if (requestedPage.length === 0) {
+      return Promise.reject({ status: 404, msg: "Page not found" });
+    }
+
+    return [requestedPage, total_count];
   });
 };
 

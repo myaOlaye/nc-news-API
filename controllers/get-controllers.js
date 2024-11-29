@@ -1,3 +1,4 @@
+const { totalCount } = require("../db/connection");
 const { sort } = require("../db/data/test-data/articles");
 const endpointsJson = require("../endpoints.json");
 const {
@@ -31,10 +32,10 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { sort_by, topic, order } = req.query;
-  selectArticles(sort_by, topic, order)
+  const { sort_by, topic, order, limit, p } = req.query;
+  selectArticles(sort_by, topic, order, limit, p)
     .then((articles) => {
-      res.status(200).send({ articles });
+      res.status(200).send({ articles: articles[0], total_count: articles[1] });
     })
     .catch((err) => {
       next(err);
