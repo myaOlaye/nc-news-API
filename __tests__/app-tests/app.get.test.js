@@ -840,3 +840,22 @@ describe("GET /api/articles/:article_id/comments?limit=num&p=num", () => {
       });
   });
 });
+describe("POST /api/topics", () => {
+  test("200: responds with newly posted topic", () => {
+    const newTopic = {
+      slug: "test topic",
+      description: "test description for a test topic",
+    };
+
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then(({ body: { newTopic } }) => {
+        expect(newTopic).toEqual({
+          slug: "test topic",
+          description: "test description for a test topic",
+        });
+      });
+  });
+});

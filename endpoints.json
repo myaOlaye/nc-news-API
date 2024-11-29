@@ -126,5 +126,11 @@
       "created_at": 1586179020000,
       "comment_count": 0
     }
+  },
+  "POST /api/topics": {
+    "description": "responds with a posted topic",
+    "exampleResponse": {
+      "topics": [{ "slug": "football", "description": "Footie!" }]
+    }
   }
 }

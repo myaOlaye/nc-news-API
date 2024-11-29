@@ -1,4 +1,8 @@
-const { insertNewComment, insertNewArticle } = require("../models/post-models");
+const {
+  insertNewComment,
+  insertNewArticle,
+  insertNewTopic,
+} = require("../models/post-models");
 
 exports.postComment = (req, res, next) => {
   const newComment = req.body;
@@ -19,6 +23,16 @@ exports.postArticle = (req, res, next) => {
   insertNewArticle(newArticle)
     .then((newArticle) => {
       res.status(201).send({ newArticle });
+    })
+    .catch(next);
+};
+
+exports.postTopic = (req, res, next) => {
+  const newTopic = req.body;
+
+  insertNewTopic(newTopic)
+    .then((newTopic) => {
+      res.status(201).send({ newTopic });
     })
     .catch(next);
 };
