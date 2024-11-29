@@ -5,6 +5,7 @@ const app = require("../../app");
 const db = require("../../db/connection");
 const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data");
+const articlesRouter = require("../../routes/articles-router");
 require("jest-sorted");
 /* Set up your beforeEach & afterAll functions here */
 
@@ -134,7 +135,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments.length).toBe(11);
+        expect(comments.length).toBeGreaterThan(0);
         comments.forEach((comment) => {
           expect(comment).toEqual({
             comment_id: expect.any(Number),
@@ -247,26 +248,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Not found");
       });
   });
-  // For whoever sees this! (sorry for leaving a comment like this, potentially a bit cheeky)
-  // BUT - I feel like 400 makes most sense for the test commented below as the body is the wrong data type
-  // but the postgressql error code is the same as the above test and the "responds with not found when id doesn't exist" test '23503' when the inserted value violates the foreign key constraint (i.e, 404 not found because the user or id dosn't exist)
-  // So how would I get the correct error message to show when I think they should have diff error messages but they have the same postgress error code?
-  // Or am I interpreting what the error code should be incorrectly.
-  // Or is the test below and above actually not neccesary, as how can a user post if they dont have an account! Sorry 🙈
-
-  // test.only("400: responds with Bad request when body is not correct data type", () => {
-  //   const newComment = {
-  //     username: "I dont exist",
-  //     body: 5,
-  //   };
-  //   return request(app)
-  //     .post("/api/articles/1/comments")
-  //     .send(newComment)
-  //     .expect(400)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe("Bad request");
-  //     });
-  // });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
@@ -577,19 +558,6 @@ describe("GET /api/articles?topic=value", () => {
         expect(msg).toBe("Not found");
       });
   });
-  // below test doesn't make sense as 5 is read as a string for some reason that I am unsure of (assuming sql does no type conversion unlike how it has previously done),
-  // so we get 404 error
-  // is this ok? Above test accounts for any non-existent AND invalid string input I think?
-  // in other words im confused why this postgress error does not get thrown:  "error: invalid input syntax for type varchar: "5"
-  // does postgress not do type conversion from strings of numbers to numbers in this scenario?
-  // test.only("400: returns Bad request when topic is invalid", () => {
-  //   return request(app)
-  //     .get("/api/articles?topic=5")
-  //     .expect(400)
-  //     .then(({ body: { msg } }) => {
-  //       expect(msg).toBe("Bad request");
-  //     });
-  // });
 });
 
 describe("GET /api/users/:username", () => {
@@ -794,12 +762,81 @@ describe("GET /api/articles?limit=num&p=num", () => {
         expect(msg).toBe("Bad request");
       });
   });
-  test("404: responds with Page not found when p does not exist", () => {
+  test("200: responds with empty array when p does not exist (no articles on that page yet)", () => {
     return request(app)
       .get("/api/articles?limit=13&p=2")
-      .expect(404)
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(0);
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments?limit=num&p=num", () => {
+  test("200: Responds with an array of comments with length of the provided limit", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=5")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(5);
+      });
+  });
+  test("400: Responds with Bad Request if provided limit is invalid data type", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=banana")
+      .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Page not found");
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with Bad Request if provided limit is invalid number", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=-1")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  describe("200: responds with the correct page array of article objects", () => {
+    test("limit=5 & p=2", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5&p=3")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(1);
+        });
+    });
+    test("limit=3 & p=2", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=3&p=2")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(3);
+        });
+    });
+  });
+  test("400: responds with Bad request when p is invalid number", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=10&p=-100")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("400: responds with Bad request when p is wrong data type", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=10&p=banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("200: responds with empty array when p doesn't exist (no comments on that page yet)", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=10&p=100")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
       });
   });
 });

@@ -88,25 +88,24 @@ exports.selectArticles = (
 
     const requestedPage = rows.splice((p - 1) * limit, limit);
 
-    if (requestedPage.length === 0) {
-      return Promise.reject({ status: 404, msg: "Page not found" });
-    }
-
     return [requestedPage, total_count];
   });
 };
 
-exports.selectComments = (article_id) => {
+exports.selectComments = (article_id, limit = 10, p = 1) => {
+  if (isNaN(limit) || limit < 1 || isNaN(p) || p < 1) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
   return db
     .query(
       `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
       [article_id]
     )
     .then(({ rows }) => {
-      return rows;
+      const requestedPage = rows.splice((p - 1) * limit, limit);
+      return requestedPage;
     });
 };
-
 exports.selectUsers = () => {
   return db.query(`SELECT * FROM users`).then(({ rows }) => {
     return rows;
