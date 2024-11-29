@@ -34,8 +34,10 @@ exports.getArticle = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
   const { sort_by, topic, order, limit, p } = req.query;
   selectArticles(sort_by, topic, order, limit, p)
-    .then((articles) => {
-      res.status(200).send({ articles: articles[0], total_count: articles[1] });
+    .then((articlesData) => {
+      res
+        .status(200)
+        .send({ articles: articlesData[0], total_count: articlesData[1] });
     })
     .catch((err) => {
       next(err);
