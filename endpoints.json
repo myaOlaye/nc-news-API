@@ -132,5 +132,9 @@
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes article of specifc id and all repsective comments",
+    "exampleResponse": {}
   }
 }
