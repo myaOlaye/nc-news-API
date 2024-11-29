@@ -13,3 +13,11 @@ exports.checkCommentExists = (comment_id) => {
       return rows[0];
     });
 };
+
+exports.removeArticle = (article_id) => {
+  return db
+    .query(`DELETE FROM comments WHERE article_id = $1`, [article_id])
+    .then(() => {
+      db.query(`DELETE FROM articles WHERE article_id = $1`, [article_id]);
+    });
+};

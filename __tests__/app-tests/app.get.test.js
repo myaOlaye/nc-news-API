@@ -840,6 +840,7 @@ describe("GET /api/articles/:article_id/comments?limit=num&p=num", () => {
       });
   });
 });
+
 describe("POST /api/topics", () => {
   test("200: responds with newly posted topic", () => {
     const newTopic = {
@@ -856,6 +857,33 @@ describe("POST /api/topics", () => {
           slug: "test topic",
           description: "test description for a test topic",
         });
+      });
+  });
+});
+
+describe("DELETE /api/articles/:article_id", () => {
+  test("204: responds with empty object (no content) after deleting an article and its respective comments", () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("400: responds with bad Request if article id is invalid", () => {
+    return request(app)
+      .delete("/api/articles/bananas")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("404: responds with Not found if article doesn't exist", () => {
+    return request(app)
+      .delete("/api/articles/50")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
       });
   });
 });
