@@ -98,7 +98,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles.length).toBe(13);
+        expect(articles.length).toBeGreaterThan(0);
         articles.forEach((article) => {
           expect(article).toEqual({
             title: expect.any(String),
@@ -554,7 +554,7 @@ describe("GET /api/articles?topic=value", () => {
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles.length).toBe(12);
+        expect(articles.length).toBeGreaterThan(0);
         articles.forEach((article) => {
           expect(article).toEqual({
             title: expect.any(String),
@@ -710,6 +710,96 @@ describe("POST /api/articles", () => {
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Not found");
+      });
+  });
+});
+
+describe("GET /api/articles?limit=num&p=num", () => {
+  test("200: responds with array of article objects paginated to a given number of articles", () => {
+    return request(app)
+      .get("/api/articles?limit=5")
+      .expect(200)
+      .then(({ body: { articles, total_count } }) => {
+        expect(articles.length).toBe(5);
+        expect(total_count).toBe(13);
+      });
+  });
+  test("200: responds with array of all article objects when limit is greater than total number of articles", () => {
+    return request(app)
+      .get("/api/articles?limit=20")
+      .expect(200)
+      .then(({ body: { articles, total_count } }) => {
+        expect(articles.length).toBe(13);
+        expect(total_count).toBe(13);
+      });
+  });
+  test("400: responds with Bad request when limit is invalid data type", () => {
+    return request(app)
+      .get("/api/articles?limit=banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("400: responds with Bad request when limit is invalid number", () => {
+    return request(app)
+      .get("/api/articles?limit=-10")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  describe("200: responds with the correct page array of article objects", () => {
+    test("limit=5 & p=3", () => {
+      return request(app)
+        .get("/api/articles?limit=5&p=3")
+        .expect(200)
+        .then(({ body: { articles, total_count } }) => {
+          expect(articles.length).toBe(3);
+          expect(total_count).toBe(13);
+        });
+    });
+    test("limit=6 & p=2", () => {
+      return request(app)
+        .get("/api/articles?limit=6&p=2")
+        .expect(200)
+        .then(({ body: { articles, total_count } }) => {
+          expect(articles.length).toBe(6);
+          expect(total_count).toBe(13);
+        });
+    });
+    test("p=2 (limit should default to 10)", () => {
+      return request(app)
+        .get("/api/articles?p=2")
+        .expect(200)
+        .then(({ body: { articles, total_count } }) => {
+          expect(articles.length).toBe(3);
+          expect(total_count).toBe(13);
+        });
+    });
+  });
+  test("400: responds with Bad request when p is invalid data type", () => {
+    return request(app)
+      .get("/api/articles?p=banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("400: responds with Bad request when p is an ivalid number", () => {
+    return request(app)
+      .get("/api/articles?limit=13&p=-5")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("404: responds with Page not found when p does not exist", () => {
+    return request(app)
+      .get("/api/articles?limit=13&p=2")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Page not found");
       });
   });
 });
