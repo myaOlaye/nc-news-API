@@ -61,8 +61,7 @@ To ensure everything is working as expected, run the test suite:
 ```bash
 npm test
 ```
----
 
-Once the setup is complete, you can explore the API locally
+Once the setup is complete, you can explore the API locally.
 
 
