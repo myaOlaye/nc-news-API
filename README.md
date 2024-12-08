@@ -7,7 +7,7 @@ This is a REST API for a news application where users can read articles, leave c
 
 You can access the live version of the project here: **https://myas-news-api.onrender.com/api**. Please note, it may take a minute to load as the server spins up on Render.
 
-## Getting Started
+## Running the Project Locally 
 
 To get started with this project locally, you will need to have Node.js and PostgreSQL installed. Then, follow the instructions below.
 
@@ -61,5 +61,8 @@ To ensure everything is working as expected, run the test suite:
 ```bash
 npm test
 ```
-Once the setup is complete, you can explore the API locally
 ---
+
+Once the setup is complete, you can explore the API locally
+
+
