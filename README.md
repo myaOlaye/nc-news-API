@@ -5,7 +5,7 @@ This is a REST API for a news application where users can read articles, leave c
 
 ### Hosted Version
 
-You can access the live version of the project here: **https://myas-news-api.onrender.com/api**
+You can access the live version of the project here: **https://myas-news-api.onrender.com/api**. Please note, it may take a minute to load as the server spins up on Render.
 
 ## Getting Started
 
