@@ -1,4 +1,4 @@
-# NC News API
+# News API
 
 ## Description
 This is a REST API for a news application where users can read articles, leave comments, and more.  
