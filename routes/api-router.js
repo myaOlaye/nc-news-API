@@ -4,8 +4,11 @@ const articlesRouter = require("./articles-router.js");
 const topicsRouter = require("./topics-router.js");
 const usersRouter = require("./users-router.js");
 const commentsRouter = require("./comments-router.js");
+const cors = require("cors");
 
 const { getApi } = require("../controllers/get-controllers");
+
+app.use(cors());
 
 apiRouter.get("/", getApi);
 
