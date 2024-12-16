@@ -8,7 +8,7 @@ const cors = require("cors");
 
 const { getApi } = require("../controllers/get-controllers");
 
-app.use(cors());
+apiRouter.use(cors());
 
 apiRouter.get("/", getApi);
 
