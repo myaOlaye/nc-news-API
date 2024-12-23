@@ -366,6 +366,47 @@ describe("GET /api/users", () => {
   });
 });
 
+describe("POST /api/users", () => {
+  test("201: Adds a new user to users", () => {
+    const newUser = {
+      username: "Mya Olaye",
+      name: "MyaTesting",
+      avatar_url:
+        "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+      password: "test-password",
+    };
+    return request(app)
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .then(({ body: { newUser } }) => {
+        expect(newUser).toEqual({
+          username: "Mya Olaye",
+          name: "MyaTesting",
+          avatar_url:
+            "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+          password: expect.any(String),
+        });
+      });
+  });
+});
+
+// describe("POST /api/users", () => {
+//   test.only("201: logs in user when user exists and password is correct", () => {
+//     const loginDetails = {
+//       username: "testuser2",
+//       password: "test-password2",
+//     };
+//     return request(app)
+//       .post("/api/users/login")
+//       .send(loginDetails)
+//       .expect(201)
+//       .then(({ body: { msg } }) => {
+//         expect(msg).toEqual("User succesfully logged in");
+//       });
+//   });
+// });
+
 describe("GET /api/articles?sort_by=value", () => {
   describe("200: responds with array of articles objects sorted by valid column, descending by default", () => {
     test("200: sorted by title, descending by default", () => {
@@ -399,14 +440,24 @@ describe("GET /api/articles?sort_by=value", () => {
         });
     });
   });
+});
+// test("200: sorted by created_at, descending by default", () => {
+//   return request(app)
+//     .get("/api/articles?sort_by=comment_count")
+//     .then(({ body: { articles } }) => {
+//       expect(articles).toBeSorted({
+//         key: "comment_count",
+//         descending: true,
+//       });
+//     });
+// });
 
-  test("400: responds Bad request when sort_by column does not exist", () => {
-    return request(app)
-      .get("/api/articles?sort_by=bananas")
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad request");
-      });
-  });
+test("400: responds Bad request when sort_by column does not exist", () => {
+  return request(app)
+    .get("/api/articles?sort_by=bananas")
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("Bad request");
+    });
 });
 
 describe("GET /api/articles?order=value", () => {
@@ -571,6 +622,7 @@ describe("GET /api/users/:username", () => {
           name: "jonny",
           avatar_url:
             "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+          password: null,
         });
       });
   });
