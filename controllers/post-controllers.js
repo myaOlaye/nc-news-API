@@ -2,6 +2,8 @@ const {
   insertNewComment,
   insertNewArticle,
   insertNewTopic,
+  insertNewUser,
+  validateUser,
 } = require("../models/post-models");
 
 exports.postComment = (req, res, next) => {
@@ -35,4 +37,28 @@ exports.postTopic = (req, res, next) => {
       res.status(201).send({ newTopic });
     })
     .catch(next);
+};
+
+exports.postUser = (req, res, next) => {
+  const newUser = req.body;
+
+  insertNewUser(newUser)
+    .then((newUser) => {
+      res.status(201).send({ newUser });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.loginUser = (req, res, next) => {
+  const { username, password } = req.body;
+
+  validateUser(username, password)
+    .then(({ status, msg }) => {
+      res.status(status).send({ msg });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const bcrypt = require("bcrypt");
 
 exports.insertNewComment = (newComment, article_id) => {
   const { username, body } = newComment;
@@ -37,5 +38,42 @@ exports.insertNewTopic = (newTopic) => {
     )
     .then(({ rows }) => {
       return rows[0];
+    });
+};
+
+exports.insertNewUser = (newUser) => {
+  const { username, name, avatar_url, password } = newUser;
+
+  return bcrypt
+    .genSalt(10)
+    .then((salt) => {
+      return bcrypt.hash(password, salt);
+    })
+    .then((hashedPassword) => {
+      return db.query(
+        `INSERT INTO users(username, name, avatar_url, password)
+  VALUES ($1,$2, $3, $4) RETURNING *`,
+        [username, name, avatar_url, hashedPassword]
+      );
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
+exports.validateUser = (username, password) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return bcrypt.compare(password, rows[0].password).then((result) => {
+        if (result) {
+          return { status: 200, msg: "Succesfully logged in" };
+        } else {
+          return Promise.reject({ status: 401, msg: "Incorrect password" });
+        }
+      });
     });
 };
