@@ -8,8 +8,8 @@ usersRouter.get("/", getUsers);
 
 usersRouter.get("/:username", getUser);
 
-usersRouter.post("/", postUser);
-
 usersRouter.post("/login", loginUser);
+
+usersRouter.post("/", postUser);
 
 module.exports = usersRouter;
