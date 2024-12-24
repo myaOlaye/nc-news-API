@@ -4,15 +4,11 @@ const articlesRouter = require("./articles-router.js");
 const topicsRouter = require("./topics-router.js");
 const usersRouter = require("./users-router.js");
 const commentsRouter = require("./comments-router.js");
-const cors = require("cors");
 
 const { getApi } = require("../controllers/get-controllers");
 
-apiRouter.use(cors());
-
 apiRouter.get("/", getApi);
 
-//Subrouters
 apiRouter.use("/topics", topicsRouter);
 apiRouter.use("/articles", articlesRouter);
 apiRouter.use("/users", usersRouter);
