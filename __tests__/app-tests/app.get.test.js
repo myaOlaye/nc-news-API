@@ -386,6 +386,7 @@ describe("POST /api/users", () => {
           avatar_url:
             "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
           password: expect.any(String),
+          refresh_token: null,
         });
       });
   });
@@ -623,6 +624,7 @@ describe("GET /api/users/:username", () => {
           avatar_url:
             "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
           password: null,
+          refresh_token: null,
         });
       });
   });
