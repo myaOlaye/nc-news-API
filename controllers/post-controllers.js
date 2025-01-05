@@ -3,7 +3,7 @@ const {
   insertNewArticle,
   insertNewTopic,
   insertNewUser,
-  validateUser,
+  authUser,
 } = require("../models/post-models");
 
 exports.postComment = (req, res, next) => {
@@ -54,9 +54,16 @@ exports.postUser = (req, res, next) => {
 exports.loginUser = (req, res, next) => {
   const { username, password } = req.body;
 
-  validateUser(username, password)
-    .then(({ status, msg }) => {
-      res.status(status).send({ msg });
+  authUser(username, password)
+    .then(({ status, accessToken, refreshToken }) => {
+      res
+        .status(status)
+        .cookie("jwt", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .send({ accessToken });
     })
     .catch((err) => {
       next(err);

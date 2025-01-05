@@ -1,5 +1,7 @@
 const db = require("../db/connection");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: ".env.secrets" });
 
 exports.insertNewComment = (newComment, article_id) => {
   const { username, body } = newComment;
@@ -61,16 +63,38 @@ exports.insertNewUser = (newUser) => {
     });
 };
 
-exports.validateUser = (username, password) => {
+exports.authUser = (username, password) => {
   return db
     .query(`SELECT * FROM users WHERE username = $1`, [username])
     .then(({ rows }) => {
       if (!rows[0]) {
         return Promise.reject({ status: 404, msg: "User not found" });
       }
-      return bcrypt.compare(password, rows[0].password).then((result) => {
-        if (result) {
-          return { status: 200, msg: "Succesfully logged in" };
+      return bcrypt.compare(password, rows[0].password).then((match) => {
+        if (match) {
+          const accessToken = jwt.sign(
+            { username },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "0.25h" }
+          );
+          const refreshToken = jwt.sign(
+            { username },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: "1d" }
+          );
+
+          return db
+            .query(
+              `UPDATE users SET refresh_token = $1 WHERE username = $2 RETURNING *`,
+              [refreshToken, username]
+            )
+            .then(() => {
+              return {
+                status: 200,
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+              };
+            });
         } else {
           return Promise.reject({ status: 401, msg: "Incorrect password" });
         }
