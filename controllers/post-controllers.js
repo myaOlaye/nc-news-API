@@ -60,7 +60,6 @@ exports.loginUser = (req, res, next) => {
         .status(status)
         .cookie("jwt", refreshToken, {
           httpOnly: true,
-          secure: true,
           maxAge: 24 * 60 * 60 * 1000,
         })
         .send({ accessToken });

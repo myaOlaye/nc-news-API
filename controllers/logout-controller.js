@@ -15,7 +15,6 @@ exports.handleLogout = (req, res, next) => {
       if (!rows[0]) {
         res.clearCookie("jwt", {
           httpOnly: true,
-          secure: true,
         });
         return res
           .status(204)
