@@ -108,7 +108,6 @@ exports.selectComments = (article_id, limit = 10, p = 1) => {
 };
 exports.selectUsers = () => {
   return db.query(`SELECT * FROM users`).then(({ rows }) => {
-    console.log(rows);
     return rows;
   });
 };

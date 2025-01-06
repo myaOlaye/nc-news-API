@@ -12,11 +12,13 @@ usersRouter.route("/").get(getUsers).post(postUser);
 usersRouter.get("/isUserAuth", verifyJwt, (req, res) => {
   res.send("You are authenticated!");
 });
+
 usersRouter.post("/login", loginUser);
 usersRouter.get("/refresh", handleRefreshToken);
 usersRouter.get("/refresh", handleRefreshToken);
 usersRouter.post("/logout", handleLogout);
 
-usersRouter.get("/:username", getUser);
+// account page endpoint
+usersRouter.get("/:username", verifyJwt, getUser);
 
 module.exports = usersRouter;

@@ -61,9 +61,11 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.getUsers = (req, res, next) => {
-  selectUsers().then((users) => {
-    res.status(200).send({ users });
-  });
+  selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch(next());
 };
 
 exports.getUser = (req, res, next) => {
