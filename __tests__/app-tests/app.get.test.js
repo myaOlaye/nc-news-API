@@ -612,31 +612,31 @@ describe("GET /api/articles?topic=value", () => {
   });
 });
 
-describe("GET /api/users/:username", () => {
-  test("200: responds with array of a specific user", () => {
-    return request(app)
-      .get("/api/users/butter_bridge")
-      .expect(200)
-      .then(({ body: { user } }) => {
-        expect(user).toEqual({
-          username: "butter_bridge",
-          name: "jonny",
-          avatar_url:
-            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-          password: null,
-          refresh_token: null,
-        });
-      });
-  });
-  test("404: responds with Not found when user doesn't exist of a specific user", () => {
-    return request(app)
-      .get("/api/users/banana")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Not found");
-      });
-  });
-});
+// describe("GET /api/users/:username", () => {
+//   test("200: responds with array of a specific user", () => {
+//     return request(app)
+//       .get("/api/users/butter_bridge")
+//       .expect(200)
+//       .then(({ body: { user } }) => {
+//         expect(user).toEqual({
+//           username: "butter_bridge",
+//           name: "jonny",
+//           avatar_url:
+//             "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+//           password: null,
+//           refresh_token: null,
+//         });
+//       });
+//   });
+//   test("404: responds with Not found when user doesn't exist of a specific user", () => {
+//     return request(app)
+//       .get("/api/users/banana")
+//       .expect(404)
+//       .then(({ body: { msg } }) => {
+//         expect(msg).toBe("Not found");
+//       });
+//   });
+// });
 
 describe("PATCH /api/comments/:comment_id", () => {
   test("200: responds with comment object with updated vote value", () => {

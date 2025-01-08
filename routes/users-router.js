@@ -15,7 +15,6 @@ usersRouter.get("/isUserAuth", verifyJwt, (req, res) => {
 
 usersRouter.post("/login", loginUser);
 usersRouter.get("/refresh", handleRefreshToken);
-usersRouter.get("/refresh", handleRefreshToken);
 usersRouter.post("/logout", handleLogout);
 
 // account page endpoint
