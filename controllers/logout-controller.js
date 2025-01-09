@@ -6,7 +6,7 @@ exports.handleLogout = (req, res, next) => {
   const refreshToken = req.cookies.jwt;
 
   if (!refreshToken) {
-    return res.status(204).send({ msg: "No request token to delete" });
+    return res.status(204).send({ msg: "No refresh token to delete" });
   }
 
   return db
@@ -31,7 +31,7 @@ exports.handleLogout = (req, res, next) => {
         .then(() => {
           res.clearCookie("jwt", {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "None",
           });
           return res
