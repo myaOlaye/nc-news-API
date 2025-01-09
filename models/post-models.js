@@ -51,7 +51,7 @@ exports.insertNewUser = (newUser) => {
     .then(({ rows }) => {
       if (rows.length > 0) {
         return Promise.reject({
-          status: 404,
+          status: 409,
           msg: "Username already exists, please try a different one",
         });
       }
