@@ -15,7 +15,7 @@ exports.handleLogout = (req, res, next) => {
       if (!rows[0]) {
         res.clearCookie("jwt", {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === "production",
           sameSite: "None",
         });
         return res
