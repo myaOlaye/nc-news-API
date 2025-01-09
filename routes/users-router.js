@@ -8,11 +8,6 @@ const { handleLogout } = require("../controllers/logout-controller");
 
 usersRouter.route("/").get(getUsers).post(postUser);
 
-// creating a test endpoint to see if token is working properly
-usersRouter.get("/isUserAuth", verifyJwt, (req, res) => {
-  res.send("You are authenticated!");
-});
-
 usersRouter.post("/login", loginUser);
 usersRouter.get("/refresh", handleRefreshToken);
 usersRouter.post("/logout", handleLogout);
