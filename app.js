@@ -13,7 +13,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Local development environment
+      "http://localhost:5173", // Local development environment,
+      "http://localhost:5174", // Local development environment
       "https://my-news-app-489224.netlify.app", // Deployed Netlify app
     ],
     credentials: true,
