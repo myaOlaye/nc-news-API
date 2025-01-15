@@ -1,9 +1,8 @@
 const db = require("../db/connection");
 
 exports.handleLogout = (req, res, next) => {
-  // on client we should also delete the access token
-
   const refreshToken = req.cookies.jwt;
+  console.log(refreshToken);
 
   if (!refreshToken) {
     return res.status(204).send({ msg: "No refresh token to delete" });
@@ -15,7 +14,7 @@ exports.handleLogout = (req, res, next) => {
       if (!rows[0]) {
         res.clearCookie("jwt", {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: true,
           sameSite: "None",
         });
         return res
@@ -31,7 +30,7 @@ exports.handleLogout = (req, res, next) => {
         .then(() => {
           res.clearCookie("jwt", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: true,
             sameSite: "None",
           });
           return res
