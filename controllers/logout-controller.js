@@ -2,7 +2,7 @@ const db = require("../db/connection");
 
 exports.handleLogout = (req, res, next) => {
   const refreshToken = req.cookies.jwt;
-  console.log(refreshToken);
+  console.log(refreshToken, "<-- refresh token");
 
   if (!refreshToken) {
     return res.status(204).send({ msg: "No refresh token to delete" });
